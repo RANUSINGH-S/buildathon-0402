@@ -8,7 +8,7 @@ st.set_page_config(page_title="SmartCare", layout="centered")
 
 # --- Sidebar Navigation ---
 st.sidebar.title("SmartCare Navigation")
-menu = st.sidebar.radio("Go to", ["🏠 Home", "📅 Book Appointment", "🧾 View Appointments"])
+menu = st.sidebar.radio("Go to", ["🏠 Home", "📅 Book Appointment", "🧾 View Appointments", "📞 Contact Us"])
 
 # --- Home Section ---
 if menu == "🏠 Home":
@@ -62,4 +62,25 @@ elif menu == "🧾 View Appointments":
         st.dataframe(df)
     else:
         st.info("No appointments found.")
+elif menu == "📞 Contact Us":
+    st.title("📞 Contact Us")
+    st.markdown("We’d love to hear from you. Please leave your message below.")
+
+    name = st.text_input("Your Name")
+    email = st.text_input("Your Email")
+    message = st.text_area("Your Message")
+
+    if st.button("Send Message"):
+        contact = pd.DataFrame([[name, email, message]],
+                               columns=["name", "email", "message"])
+        
+        if os.path.exists("contact_messages.csv"):
+            df = pd.read_csv("contact_messages.csv")
+            df = pd.concat([df, contact], ignore_index=True)
+        else:
+            df = contact
+
+        df.to_csv("contact_messages.csv", index=False)
+        st.success("✅ Thank you! Your message has been received.")
+
 
