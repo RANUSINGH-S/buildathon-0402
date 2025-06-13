@@ -124,7 +124,7 @@ elif menu == "📅 Book Appointment":
                     msg.add_attachment(f.read(), maintype='application', subtype='pdf', filename="receipt.pdf")
 
                 with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-                    smtp.login('your_email@gmail.com', 'your_password')  # Replace
+                    smtp.login('ctr_alt_algo@gmail.com', 'Raman2004@ok')  # Replace
                     smtp.send_message(msg)
                 st.success("📧 Email sent!")
             except:
