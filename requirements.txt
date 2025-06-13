@@ -1,4 +1,10 @@
 streamlit
 pandas
-gtts
+gTTS
+fpdf
+qrcode
+Pillow
+email-validator
+
+
 

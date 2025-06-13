@@ -178,3 +178,6 @@ elif menu == "📞 Contact Us":
 
         df.to_csv("contact_messages.csv", index=False)
         st.success("✅ Thank you! Your message has been received.")
+# Ensure folders exist
+os.makedirs("temp", exist_ok=True)
+os.makedirs("images", exist_ok=True)
