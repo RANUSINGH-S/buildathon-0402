@@ -93,12 +93,12 @@ elif menu == "📅 Book Appointment":
             st.audio(audio_file.read(), format="audio/mp3")
 
             # ✅ QR Code Generation
+            # ✅ Save QR Code to file
             qr = qrcode.make(f"{name}, {doctor}, {date}, {time}")
-            qr_bytes = BytesIO()
-            qr.save(qr_bytes, format='PNG')
-            qr_bytes.seek(0)
+            qr_path = "qr_code.png"
+            qr.save(qr_path)
 
-            # ✅ PDF Receipt
+            # ✅ PDF Receipt with QR from file
             pdf = FPDF()
             pdf.add_page()
             pdf.set_font("Arial", size=12)
@@ -107,8 +107,11 @@ elif menu == "📅 Book Appointment":
             pdf.cell(200, 10, txt=f"Doctor: {doctor}", ln=True)
             pdf.cell(200, 10, txt=f"Date: {date}", ln=True)
             pdf.cell(200, 10, txt=f"Time: {time}", ln=True)
-            pdf.image(qr_bytes, x=80, y=60, w=50)
+            pdf.image(qr_path, x=80, y=60, w=50)  # ✅ Now using file path
             pdf.output("receipt.pdf")
+
+
+           
 
             # ✅ Email Notification (configure below)
             try:
