@@ -117,14 +117,14 @@ elif menu == "📅 Book Appointment":
             try:
                 msg = EmailMessage()
                 msg['Subject'] = 'SmartCare Appointment Confirmation'
-                msg['From'] = 'your_email@gmail.com'
+                msg['From'] = 'ctr_alt_algo@gmail.com'
                 msg['To'] = email
                 msg.set_content(f"Appointment booked with {doctor} at {time} on {date}")
                 with open("receipt.pdf", 'rb') as f:
                     msg.add_attachment(f.read(), maintype='application', subtype='pdf', filename="receipt.pdf")
 
                 with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-                    smtp.login('ctr_alt_algo@gmail.com', 'Raman2004@ok')  # Replace
+                    smtp.login('ctr_alt_algo@gmail.com', 'Raman2004@ok')  # Use app password
                     smtp.send_message(msg)
                 st.success("📧 Email sent!")
             except:
