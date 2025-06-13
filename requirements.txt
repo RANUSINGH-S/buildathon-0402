@@ -5,6 +5,7 @@ fpdf
 qrcode
 Pillow
 email-validator
+qrcode[pil]
 
 
 
