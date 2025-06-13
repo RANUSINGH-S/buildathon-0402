@@ -156,7 +156,8 @@ elif menu == "🧾 View Appointments":
             st.info("No appointments found.")
     else:
         st.warning("Access denied ❌")
-menu = st.sidebar.radio("Go to", ["🏠 Home", "📅 Book Appointment", "🧾 View Appointments", "📞 Contact Us"])
+
+# --- Contact Us Section ---
 # --- Contact Us Section ---
 elif menu == "📞 Contact Us":
     st.title("📞 Contact Us")
