@@ -1,10 +1,14 @@
 import streamlit as st
 import pandas as pd
 from gtts import gTTS
+from PIL import Image
 import os
 
 # ✅ Must be the first Streamlit command
 st.set_page_config(page_title="SmartCare", layout="centered")
+
+# ✅ Load local image
+img = Image.open("C:/Users/ranus/Downloads/images.hc.png")  # ← change path if needed
 
 # ✅ Custom CSS Styling
 st.markdown("""
@@ -39,11 +43,11 @@ menu = st.sidebar.radio("Go to", ["🏠 Home", "📅 Book Appointment", "🧾 Vi
 # --- Home Section ---
 if menu == "🏠 Home":
     st.title("🏥 Welcome to SmartCare")
-    st.image(img, use_container_width=True)
+    st.image(img, use_container_width=True)  # ✅ No deprecated param
     st.markdown("""
         ## Your Digital Health Assistant
         **SmartCare** helps hospitals reduce wait times by allowing patients to book appointments online.
-        
+
         🔹 Book appointments in seconds  
         🔹 Instant voice confirmation  
         🔹 Admin panel to view all bookings  
