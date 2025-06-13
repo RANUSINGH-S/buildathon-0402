@@ -148,20 +148,13 @@ elif menu == "🧾 View Appointments":
 
             st.subheader("📋 Appointments")
             st.write(f"👥 Total appointments for {selected_date}: {len(filtered_df)}")
-
             for i, row in filtered_df.iterrows():
                 st.write(f"👤 {row['name']} - {row['doctor']} - {row['date'].strftime('%Y-%m-%d')} at {row['time']}")
                 if st.button(f"Cancel #{i}", key=f"cancel_{i}"):
                     df.drop(i, inplace=True)
                     df.to_csv("appointments.csv", index=False)
                     st.success("❌ Appointment cancelled.")
-                    st.session_state.rerun_flag = True
-
-            # ✅ Safe rerun
-            if st.session_state.rerun_flag:
-                st.session_state.rerun_flag = False
-                st.rerun()
-
+                    st.rerun()
         else:
             st.info("No appointments found.")
     else:
