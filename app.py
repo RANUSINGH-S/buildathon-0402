@@ -43,7 +43,6 @@ menu = st.sidebar.radio("Go to", ["🏠 Home", "📅 Book Appointment", "🧾 Vi
 # --- Home Section ---
 if menu == "🏠 Home":
     st.title("🏥 Welcome to SmartCare")
-    st.image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmT9poxZoqk0ZmzxMu7sMPktNK9dUVIdbp9A&s", use_container_width=True)  # ✅ No deprecated param
     st.markdown("""
         ## Your Digital Health Assistant
         **SmartCare** helps hospitals reduce wait times by allowing patients to book appointments online.
