@@ -156,7 +156,7 @@ elif menu == "🧾 View Appointments":
             st.info("No appointments found.")
     else:
         st.warning("Access denied ❌")
-
+menu = st.sidebar.radio("Go to", ["🏠 Home", "📅 Book Appointment", "🧾 View Appointments", "📞 Contact Us"])
 # --- Contact Us Section ---
 elif menu == "📞 Contact Us":
     st.title("📞 Contact Us")
@@ -167,9 +167,8 @@ elif menu == "📞 Contact Us":
     message = st.text_area("Your Message")
 
     if st.button("Send Message"):
-        contact = pd.DataFrame([[name, email, message]],
-                               columns=["name", "email", "message"])
-        
+        contact = pd.DataFrame([[name, email, message]], columns=["name", "email", "message"])
+
         if os.path.exists("contact_messages.csv"):
             df = pd.read_csv("contact_messages.csv")
             df = pd.concat([df, contact], ignore_index=True)
@@ -178,5 +177,6 @@ elif menu == "📞 Contact Us":
 
         df.to_csv("contact_messages.csv", index=False)
         st.success("✅ Thank you! Your message has been received.")
+
 
 
