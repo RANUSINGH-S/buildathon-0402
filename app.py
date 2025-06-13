@@ -73,12 +73,6 @@ elif menu == "📅 Book Appointment":
     }
     time = st.selectbox("Time Slot", time_slot_map[doctor])
 
-    if st.button(f"Cancel #{i}", key=f"cancel_{i}"):
-    df.drop(i, inplace=True)
-    df.to_csv("appointments.csv", index=False)
-    st.success("❌ Appointment cancelled.")
-    st.session_state.rerun_flag = True
-
     if st.button("Book Appointment"):
         with st.spinner("Booking your appointment..."):
             new_data = pd.DataFrame([[name, email, doctor, date, time]],
@@ -91,11 +85,6 @@ elif menu == "📅 Book Appointment":
                 df = new_data
 
             df.to_csv("appointments.csv", index=False)
-            # ✅ Trigger rerun if needed
-            if st.session_state.rerun_flag:
-                st.session_state.rerun_flag = False
-                st.experimental_rerun()
-
 
             # ✅ Voice Confirmation
             tts = gTTS(f"Appointment booked with {doctor} at {time} on {date}")
@@ -104,7 +93,6 @@ elif menu == "📅 Book Appointment":
             st.audio(audio_file.read(), format="audio/mp3")
 
             # ✅ QR Code Generation
-            # ✅ Save QR Code to file
             qr = qrcode.make(f"{name}, {doctor}, {date}, {time}")
             qr_path = "qr_code.png"
             qr.save(qr_path)
@@ -118,13 +106,10 @@ elif menu == "📅 Book Appointment":
             pdf.cell(200, 10, txt=f"Doctor: {doctor}", ln=True)
             pdf.cell(200, 10, txt=f"Date: {date}", ln=True)
             pdf.cell(200, 10, txt=f"Time: {time}", ln=True)
-            pdf.image(qr_path, x=80, y=60, w=50)  # ✅ Now using file path
+            pdf.image(qr_path, x=80, y=60, w=50)
             pdf.output("receipt.pdf")
 
-
-           
-
-            # ✅ Email Notification (configure below)
+            # ✅ Email Notification
             try:
                 msg = EmailMessage()
                 msg['Subject'] = 'SmartCare Appointment Confirmation'
@@ -135,7 +120,7 @@ elif menu == "📅 Book Appointment":
                     msg.add_attachment(f.read(), maintype='application', subtype='pdf', filename="receipt.pdf")
 
                 with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-                    smtp.login('ctr_alt_algo@gmail.com', 'Raman2004@ok')  # Use app password
+                    smtp.login('ctr_alt_algo@gmail.com', 'Raman2004@ok')  # use app-specific password
                     smtp.send_message(msg)
                 st.success("📧 Email sent!")
             except:
@@ -148,6 +133,7 @@ elif menu == "🧾 View Appointments":
     st.title("🔐 Admin Login")
     pwd = st.text_input("Enter admin password", type="password")
 
+    # ✅ Initialize rerun flag once
     if "rerun_flag" not in st.session_state:
         st.session_state.rerun_flag = False
 
@@ -172,40 +158,10 @@ elif menu == "🧾 View Appointments":
                     st.success("❌ Appointment cancelled.")
                     st.session_state.rerun_flag = True
 
-            # ✅ Safe rerun
+            # ✅ Safe rerun trigger
             if st.session_state.rerun_flag:
                 st.session_state.rerun_flag = False
                 st.experimental_rerun()
-
-        else:
-            st.info("No appointments found.")
-    else:
-        st.warning("Access denied ❌")
-
-    
-    # ✅ Initialize rerun flag
-    if "rerun_flag" not in st.session_state:
-        st.session_state.rerun_flag = False
-
-    if pwd == "smartcare123":
-        st.success("Access granted ✅")
-
-        if os.path.exists("appointments.csv"):
-            df = pd.read_csv("appointments.csv")
-            df["date"] = pd.to_datetime(df["date"])
-
-            selected_date = st.date_input("📅 Filter appointments by date")
-            filtered_df = df[df["date"].dt.date == selected_date]
-
-            st.subheader("📋 Appointments")
-            st.write(f"👥 Total appointments for {selected_date}: {len(filtered_df)}")
-            for i, row in filtered_df.iterrows():
-                st.write(f"👤 {row['name']} - {row['doctor']} - {row['date'].strftime('%Y-%m-%d')} at {row['time']}")
-                if st.button(f"Cancel #{i}", key=f"cancel_{i}"):
-                    df.drop(i, inplace=True)
-                    df.to_csv("appointments.csv", index=False)
-                    st.success("❌ Appointment cancelled.")
-                    st.experimental_rerun()
         else:
             st.info("No appointments found.")
     else:
@@ -232,6 +188,7 @@ elif menu == "📞 Contact Us":
 
         df.to_csv("contact_messages.csv", index=False)
         st.success("✅ Thank you! Your message has been received.")
-# Ensure folders exist
+
+# ✅ Ensure folders exist
 os.makedirs("temp", exist_ok=True)
 os.makedirs("images", exist_ok=True)
