@@ -158,7 +158,6 @@ elif menu == "🧾 View Appointments":
         st.warning("Access denied ❌")
 
 # --- Contact Us Section ---
-# --- Contact Us Section ---
 elif menu == "📞 Contact Us":
     st.title("📞 Contact Us")
     st.markdown("We’d love to hear from you. Please leave your message below.")
@@ -168,7 +167,8 @@ elif menu == "📞 Contact Us":
     message = st.text_area("Your Message")
 
     if st.button("Send Message"):
-        contact = pd.DataFrame([[name, email, message]], columns=["name", "email", "message"])
+        contact = pd.DataFrame([[name, email, message]],
+                               columns=["name", "email", "message"])
 
         if os.path.exists("contact_messages.csv"):
             df = pd.read_csv("contact_messages.csv")
@@ -178,6 +178,3 @@ elif menu == "📞 Contact Us":
 
         df.to_csv("contact_messages.csv", index=False)
         st.success("✅ Thank you! Your message has been received.")
-
-
-
