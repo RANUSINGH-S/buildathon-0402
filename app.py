@@ -147,6 +147,68 @@ elif menu == "📅 Book Appointment":
 
         st.success(f"✅ Appointment booked with {doctor} at {time} on {date}")
 
+# --- Admin Panel Section ---
+elif menu == "🧾 View Appointments":
+    st.title("🔐 Admin Login")
+    
+    # For admin login
+    pwd = st.text_input("Enter admin password", type="password", key="admin_pwd")
+
+    # Somewhere else
+    email = st.text_input("Enter email", key="contact_email")
+
+
+    if "rerun_flag" not in st.session_state:
+        st.session_state.rerun_flag = False
+
+    if pwd == "smartcare123":
+        st.success("Access granted ✅")
+
+        if os.path.exists("appointments.csv"):
+            df = pd.read_csv("appointments.csv")
+            df["date"] = pd.to_datetime(df["date"])
+
+            selected_date = st.date_input("📅 Filter appointments by date")
+            filtered_df = df[df["date"].dt.date == selected_date]
+
+            st.subheader("📋 Appointments")
+            st.write(f"👥 Total appointments for {selected_date}: {len(filtered_df)}")
+
+            for i, row in filtered_df.iterrows():
+                st.write(f"👤 {row['name']} - {row['doctor']} - {row['date'].strftime('%Y-%m-%d')} at {row['time']}")
+                if st.button(f"Cancel #{i}", key=f"cancel_{i}"):
+                    df.drop(i, inplace=True)
+                    df.to_csv("appointments.csv", index=False)
+                    st.success("❌ Appointment cancelled.")
+                    st.rerun()
+        else:
+            st.info("No appointments found.")
+    else:
+        st.warning("Access denied ❌")
+
+
+
+# --- Contact Us Section ---
+elif menu == "📞 Contact Us":
+    st.title("📞 Contact Us")
+    st.markdown("We’d love to hear from you. Please leave your message below.")
+
+    name = st.text_input("Your Name")
+    email = st.text_input("Your Email")
+    message = st.text_area("Your Message")
+
+    if st.button("Send Message"):
+        contact = pd.DataFrame([[name, email, message]],
+                               columns=["name", "email", "message"])
+
+        if os.path.exists("contact_messages.csv"):
+            df = pd.read_csv("contact_messages.csv")
+            df = pd.concat([df, contact], ignore_index=True)
+        else:
+            df = contact
+
+        df.to_csv("contact_messages.csv", index=False)
+        st.success("✅ Thank you! Your message has been received.")
 
 # ✅ Ensure folders exist
 os.makedirs("temp", exist_ok=True)
