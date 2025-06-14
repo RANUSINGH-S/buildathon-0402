@@ -166,45 +166,6 @@ elif menu == "🧾 View Appointments":
 
     st.title("🔐 Admin Login")
     pwd = st.text_input("Enter admin password", type="password")
-# ✅ Trigger rerun if needed
-    if st.session_state.rerun_flag:
-        st.session_state.rerun_flag = False
-        st.experimental_rerun()
-
-
-    # ✅ Initialize rerun flag once
-    if "rerun_flag" not in st.session_state:
-        st.session_state.rerun_flag = False
-
-    if pwd == "smartcare123":
-        st.success("Access granted ✅")
-
-        if os.path.exists("appointments.csv"):
-            df = pd.read_csv("appointments.csv")
-            df["date"] = pd.to_datetime(df["date"])
-
-            selected_date = st.date_input("📅 Filter appointments by date")
-            filtered_df = df[df["date"].dt.date == selected_date]
-
-            st.subheader("📋 Appointments")
-            st.write(f"👥 Total appointments for {selected_date}: {len(filtered_df)}")
-
-            for i, row in filtered_df.iterrows():
-                st.write(f"👤 {row['name']} - {row['doctor']} - {row['date'].strftime('%Y-%m-%d')} at {row['time']}")
-                if st.button(f"Cancel #{i}", key=f"cancel_{i}"):
-                    df.drop(i, inplace=True)
-                    df.to_csv("appointments.csv", index=False)
-                    st.success("❌ Appointment cancelled.")
-                    st.session_state.rerun_flag = True
-
-            # ✅ Safe rerun trigger
-            if st.session_state.rerun_flag:
-                st.session_state.rerun_flag = False
-                st.experimental_rerun()
-        else:
-            st.info("No appointments found.")
-    else:
-        st.warning("Access denied ❌")
 
 # --- Contact Us Section ---
 elif menu == "📞 Contact Us":
