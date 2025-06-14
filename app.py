@@ -102,9 +102,20 @@ elif menu == "📅 Book Appointment":
             st.audio(audio_file.read(), format="audio/mp3")
 
             # ✅ QR Code Generation
-            qr = qrcode.make(f"{name}, {doctor}, {date}, {time}")
-            qr_path = "qr_code.png"
-            qr.save(qr_path)
+            import os
+            import qrcode
+            import streamlit as st
+
+            # Step 1: Ensure folder exists
+            os.makedirs("qrcodes", exist_ok=True)
+
+            # Then later when booking:
+            if st.button("Book Appointment"):
+                qr_data = f"{name}, {doctor}, {date}, {time}"
+                qr = qrcode.make(qr_data)
+                qr_path = f"qrcodes/{name}_{doctor}_{date}_{time}.png".replace(" ", "_")
+                qr.save(qr_path)
+
 
             # ✅ PDF Receipt with QR from file
             pdf = FPDF()
