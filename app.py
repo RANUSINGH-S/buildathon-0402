@@ -131,7 +131,7 @@ elif menu == "📅 Book Appointment":
 # --- Admin Panel Section ---
 elif menu == "🧾 View Appointments":
     st.title("🔐 Admin Login")
-    pwd = st.text_input("Enter admin password", type="password")
+    pwd = st.text_input("Enter admin password", type="password", key="admin_pwd_input")
 
     if "rerun_flag" not in st.session_state:
         st.session_state.rerun_flag = False
