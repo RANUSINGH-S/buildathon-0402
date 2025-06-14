@@ -154,10 +154,6 @@ elif menu == "🧾 View Appointments":
     # For admin login
     pwd = st.text_input("Enter admin password", type="password", key="admin_pwd")
 
-    # Somewhere else
-    email = st.text_input("Enter email", key="contact_email")
-
-
     if "rerun_flag" not in st.session_state:
         st.session_state.rerun_flag = False
 
