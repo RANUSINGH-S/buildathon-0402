@@ -116,6 +116,21 @@ elif menu == "📅 Book Appointment":
                 qr_path = f"qrcodes/{name}_{doctor}_{date}_{time}.png".replace(" ", "_")
                 qr.save(qr_path)
 
+            from PIL import Image
+
+            # Load and display the QR code in the app
+            qr_image = Image.open(qr_path)
+            st.image(qr_image, caption="Your Appointment QR Code", use_column_width=True)
+            
+            with open(qr_path, "rb") as f:
+                btn = st.download_button(
+                    label="Download QR Code",
+                    data=f,
+                    file_name=os.path.basename(qr_path),
+                    mime="image/png"
+                )
+
+
 
             # ✅ PDF Receipt with QR from file
             pdf = FPDF()
