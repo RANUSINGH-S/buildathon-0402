@@ -114,7 +114,7 @@ elif menu == "📅 Book Appointment":
             qr_path = f"qrcodes/{name}_{date}_{time}.png".replace(":", "-")
             qr.save(qr_path)
             st.success("✅ QR Code Generated!")
-            st.image(qr_path, caption="Appointment QR Code", use_column_width=True)
+            st.image(qr_path, caption="Appointment QR Code", width=150)  # 👈 Set a smaller width (in pixels)
 
             # ✅ PDF Receipt with QR from file
             pdf = FPDF()
