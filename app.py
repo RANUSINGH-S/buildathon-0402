@@ -131,6 +131,8 @@ elif menu == "📅 Book Appointment":
 # --- Admin Panel Section ---
 elif menu == "🧾 View Appointments":
     st.title("🔐 Admin Login")
+
+    # Only ONE instance of this input with a unique key
     pwd = st.text_input("Enter admin password", type="password", key="admin_pwd_input")
 
     if "rerun_flag" not in st.session_state:
@@ -148,6 +150,7 @@ elif menu == "🧾 View Appointments":
 
             st.subheader("📋 Appointments")
             st.write(f"👥 Total appointments for {selected_date}: {len(filtered_df)}")
+
             for i, row in filtered_df.iterrows():
                 st.write(f"👤 {row['name']} - {row['doctor']} - {row['date'].strftime('%Y-%m-%d')} at {row['time']}")
                 if st.button(f"Cancel #{i}", key=f"cancel_{i}"):
@@ -159,6 +162,7 @@ elif menu == "🧾 View Appointments":
             st.info("No appointments found.")
     else:
         st.warning("Access denied ❌")
+
 
     st.title("🔐 Admin Login")
     pwd = st.text_input("Enter admin password", type="password")
