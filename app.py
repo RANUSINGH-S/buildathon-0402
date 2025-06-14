@@ -9,6 +9,15 @@ from fpdf import FPDF
 import smtplib
 from email.message import EmailMessage
 
+import os
+
+file_path = "contact_messages.csv"
+
+if not os.path.exists(file_path):
+    with open(file_path, "w") as f:
+        f.write("name,email,message,timestamp\n")
+
+
 # ✅ Must be the first Streamlit command
 st.set_page_config(page_title="SmartCare", layout="centered")
 
