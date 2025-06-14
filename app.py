@@ -103,34 +103,16 @@ elif menu == "📅 Book Appointment":
 
             # ✅ QR Code Generation
             import os
-            import qrcode
-            import streamlit as st
 
-            # Step 1: Ensure folder exists
-            os.makedirs("qrcodes", exist_ok=True)
+            # Create 'qrcodes' folder if it doesn't exist
+            if not os.path.exists("qrcodes"):
+                os.makedirs("qrcodes")
 
-            # Then later when booking:
-            if st.button("Book Appointment"):
-                qr_data = f"{name}, {doctor}, {date}, {time}"
-                qr = qrcode.make(qr_data)
-                qr_path = f"qrcodes/{name}_{doctor}_{date}_{time}.png".replace(" ", "_")
-                qr.save(qr_path)
-
-            from PIL import Image
-
-            # Load and display the QR code in the app
-            qr_image = Image.open(qr_path)
-            st.image(qr_image, caption="Your Appointment QR Code", use_column_width=True)
-            
-            with open(qr_path, "rb") as f:
-                btn = st.download_button(
-                    label="Download QR Code",
-                    data=f,
-                    file_name=os.path.basename(qr_path),
-                    mime="image/png"
-                )
-
-
+            # Save QR with a unique filename
+            filename = f"qrcodes/{name}_{date}_{time}.png"
+            qr.save(filename)
+            st.success("✅ QR Code Generated!")
+            st.image(filename, caption="Appointment QR Code", use_column_width=True)
 
             # ✅ PDF Receipt with QR from file
             pdf = FPDF()
@@ -166,9 +148,13 @@ elif menu == "📅 Book Appointment":
 # --- Admin Panel Section ---
 elif menu == "🧾 View Appointments":
     st.title("🔐 Admin Login")
+    
+    # For admin login
+    pwd = st.text_input("Enter admin password", type="password", key="admin_pwd")
 
-    # Only ONE instance of this input with a unique key
-    pwd = st.text_input("Enter admin password", type="password", key="admin_pwd_input")
+    # Somewhere else
+    email = st.text_input("Enter email", key="contact_email")
+
 
     if "rerun_flag" not in st.session_state:
         st.session_state.rerun_flag = False
