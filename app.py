@@ -71,18 +71,18 @@ if menu == "🏠 Home":
 # --- Book Appointment Section ---
 elif menu == "📅 Book Appointment":
     st.title("📅 Book Your Appointment")
-    name = st.text_input("Patient Name")
-    email = st.text_input("Email")
-    doctor = st.selectbox("Select Doctor", ["Dr. Sharma", "Dr. Verma", "Dr. Aisha"])
-    date = st.date_input("Appointment Date")
+    name = st.text_input("Patient Name", key="patient_name")
+    email = st.text_input("Email", key="patient_email")
+    doctor = st.selectbox("Select Doctor", ["Dr. Sharma", "Dr. Verma", "Dr. Aisha"], key="doctor_select")
+    date = st.date_input("Appointment Date", key="appt_date")
     time_slot_map = {
         "Dr. Sharma": ["10:00 AM", "11:00 AM"],
         "Dr. Verma": ["12:00 PM", "3:00 PM"],
         "Dr. Aisha": ["1:00 PM", "4:00 PM"]
     }
-    time = st.selectbox("Time Slot", time_slot_map[doctor])
+    time = st.selectbox("Time Slot", time_slot_map[doctor], key="time_slot")
 
-    if st.button("Book Appointment"):
+    if st.button("Book Appointment", key="book_button"):
         with st.spinner("Booking your appointment..."):
             new_data = pd.DataFrame([[name, email, doctor, date, time]],
                                     columns=["name", "email", "doctor", "date", "time"])
@@ -103,16 +103,18 @@ elif menu == "📅 Book Appointment":
 
             # ✅ QR Code Generation
             import os
-
-            # Create 'qrcodes' folder if it doesn't exist
             if not os.path.exists("qrcodes"):
                 os.makedirs("qrcodes")
 
+            # 📦 Create QR content dataset
+            qr_data = f"Patient: {name}\nDoctor: {doctor}\nDate: {date}\nTime: {time}"
+            qr = qrcode.make(qr_data)
+
             # Save QR with a unique filename
-            filename = f"qrcodes/{name}_{date}_{time}.png"
-            qr.save(filename)
+            qr_path = f"qrcodes/{name}_{date}_{time}.png".replace(":", "-")
+            qr.save(qr_path)
             st.success("✅ QR Code Generated!")
-            st.image(filename, caption="Appointment QR Code", use_column_width=True)
+            st.image(qr_path, caption="Appointment QR Code", use_column_width=True)
 
             # ✅ PDF Receipt with QR from file
             pdf = FPDF()
@@ -137,7 +139,7 @@ elif menu == "📅 Book Appointment":
                     msg.add_attachment(f.read(), maintype='application', subtype='pdf', filename="receipt.pdf")
 
                 with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-                    smtp.login('ctr_alt_algo@gmail.com', 'Raman2004@ok')  # use app-specific password
+                    smtp.login('ctr_alt_algo@gmail.com', 'Raman2004@ok')  # Use app password here
                     smtp.send_message(msg)
                 st.success("📧 Email sent!")
             except:
@@ -145,68 +147,6 @@ elif menu == "📅 Book Appointment":
 
         st.success(f"✅ Appointment booked with {doctor} at {time} on {date}")
 
-# --- Admin Panel Section ---
-elif menu == "🧾 View Appointments":
-    st.title("🔐 Admin Login")
-    
-    # For admin login
-    pwd = st.text_input("Enter admin password", type="password", key="admin_pwd")
-
-    # Somewhere else
-    email = st.text_input("Enter email", key="contact_email")
-
-
-    if "rerun_flag" not in st.session_state:
-        st.session_state.rerun_flag = False
-
-    if pwd == "smartcare123":
-        st.success("Access granted ✅")
-
-        if os.path.exists("appointments.csv"):
-            df = pd.read_csv("appointments.csv")
-            df["date"] = pd.to_datetime(df["date"])
-
-            selected_date = st.date_input("📅 Filter appointments by date")
-            filtered_df = df[df["date"].dt.date == selected_date]
-
-            st.subheader("📋 Appointments")
-            st.write(f"👥 Total appointments for {selected_date}: {len(filtered_df)}")
-
-            for i, row in filtered_df.iterrows():
-                st.write(f"👤 {row['name']} - {row['doctor']} - {row['date'].strftime('%Y-%m-%d')} at {row['time']}")
-                if st.button(f"Cancel #{i}", key=f"cancel_{i}"):
-                    df.drop(i, inplace=True)
-                    df.to_csv("appointments.csv", index=False)
-                    st.success("❌ Appointment cancelled.")
-                    st.rerun()
-        else:
-            st.info("No appointments found.")
-    else:
-        st.warning("Access denied ❌")
-
-
-
-# --- Contact Us Section ---
-elif menu == "📞 Contact Us":
-    st.title("📞 Contact Us")
-    st.markdown("We’d love to hear from you. Please leave your message below.")
-
-    name = st.text_input("Your Name")
-    email = st.text_input("Your Email")
-    message = st.text_area("Your Message")
-
-    if st.button("Send Message"):
-        contact = pd.DataFrame([[name, email, message]],
-                               columns=["name", "email", "message"])
-
-        if os.path.exists("contact_messages.csv"):
-            df = pd.read_csv("contact_messages.csv")
-            df = pd.concat([df, contact], ignore_index=True)
-        else:
-            df = contact
-
-        df.to_csv("contact_messages.csv", index=False)
-        st.success("✅ Thank you! Your message has been received.")
 
 # ✅ Ensure folders exist
 os.makedirs("temp", exist_ok=True)
