@@ -164,8 +164,6 @@ elif menu == "🧾 View Appointments":
         st.warning("Access denied ❌")
 
 
-    st.title("🔐 Admin Login")
-    pwd = st.text_input("Enter admin password", type="password")
 
 # --- Contact Us Section ---
 elif menu == "📞 Contact Us":
